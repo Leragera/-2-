@@ -1,0 +1,114 @@
+import timeit
+import numpy as np
+
+print('Доступные размеры матриц: 2х2, 3х3')
+
+def transpM(m):
+    return list(map(list, zip(*m)))
+
+def getMMinor(m, i, j):
+    return [row[:j] + row[j + 1:] for row in (m[:i] + m[i + 1:])]
+
+def getMDet(m):
+    # определитель для матрицы 2х2
+    if len(m) == 2:
+        return m[0][0] * m[1][1] - m[0][1] * m[1][0]
+
+    det = 0
+    for c in range(len(m)):
+        det += ((-1) ** c) * m[0][c] * getMDet(getMMinor(m, 0, c))  # алгеброическое дополнение
+    return det
+
+def getMInverse(m):  # принимает массив массивов в качестве входных данных
+    det = getMDet(m)
+    # "особый" случай для матрицы 2х2
+    if len(m) == 2:
+        return [[m[1][1] / det, (-1) * m[0][1] / det],
+                [(-1) * m[1][0] / det, m[0][0] / det]]
+
+    # нахождение примыкающей матрицы(транспортированная матрица алгебраических дополнений)
+    a1adj = []
+    for r in range(len(m)):
+        a1adjRow = []
+        for c in range(len(m)):
+            minor = getMMinor(m, r, c)
+            a1adjRow.append(((-1) ** (r + c)) * getMDet(minor))  # алгеброическое дополнение
+        a1adj.append(a1adjRow)
+
+    a1adj = transpM(a1adj)  # !
+
+    for r in range(len(a1adj)):
+        for c in range(len(a1adj)):
+            a1adj[r][c] = a1adj[r][c] / det
+    return a1adj
+
+def getMDet3(m):
+    if len(m) == 3:
+        return (m[0][0] * m[1][1] * m[2][2] + m[0][1] * m[1][2] * m[2][0] + m[1][0] * m[2][1] * m[0][2]) - \
+               (m[0][2] * m[1][1] * m[2][0] + m[0][1] * m[1][0] * m[2][2] + m[2][1] * m[1][2] * m[0][0])
+
+    det = 0
+    for c in range(len(m)):
+        det += ((-1) ** c) * m[0][c] * getMDet3(getMMinor(m, 0, c))  # алгеброическое дополнение
+    return det
+
+
+def getMInverse3(m):  # принимает массив массивов в качестве входных данных
+    det = getMDet3(m)
+    if len(m) == 3 and det != 0:
+        return [[getMDet(getMMinor(m, i, 0)) / det, (-1) * getMDet(getMMinor(m, i, 1)) / det, getMDet(getMMinor(m, i, 2)) / det],
+                [(-1) * getMDet(getMMinor(m, i, 0)) / det, getMDet(getMMinor(m, i, 1)) / det, getMDet(getMMinor(m, i, 2)) / det],
+                [getMDet(getMMinor(m, i, 0)) / det, (-1) * getMDet(getMMinor(m, i, 1)) / det, getMDet(getMMinor(m, i, 2)) / det]]
+
+    # нахождение примыкающей матрицы(транспортированная матрица алгебраических дополнений)
+    a1adj = []
+    for r in range(len(m)):
+        a1adjRow = []
+        for c in range(len(m)):
+            minor = getMMinor(m, r, c)
+            a1adjRow.append(((-1) ** (r + c)) * getMDet3(minor))  # алгеброическое дополнение
+        a1adj.append(a1adjRow)
+
+    a1adj = transpM(a1adj)  # !
+
+    for r in range(len(a1adj)):
+        for c in range(len(a1adj)):
+            a1adj[r][c] = a1adj[r][c] / det
+    return a1adj
+
+
+print('Введите количесвто строк для первой матрицы')
+a1 = int(input())
+m1 = []
+print('Заполните первую матрицу (ввести элементы через пробел)')
+for i in range(a1):
+    a = list(map(int, input().split()))
+    m1.append(a)
+
+print('Обратная матрица')
+if len(m1) == 2:
+    print(getMInverse(m1))  # результат
+if len(m1) == 3:
+    print(getMInverse3(m1))
+
+print('обратная матрица Numpy')
+print(np.linalg.inv(m1))
+if len(m1) == 3:
+    start = timeit.default_timer()
+    getMInverse3(m1)
+    stop = timeit.default_timer()
+    r = stop - start
+    print('Время, затраченное на выполнение программы: ', r)
+
+if len(m1) == 2:
+    start = timeit.default_timer()
+    getMInverse(m1)
+    stop = timeit.default_timer()
+    r = stop - start
+    print('Время, затраченное на выполнение программы: ', r)
+
+start = timeit.default_timer()
+np.linalg.inv(m1)
+stop = timeit.default_timer()
+r1 = stop - start
+print('Время, затраченное на выполнение программы с Numpy: ', r1)
