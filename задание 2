@@ -1,0 +1,33 @@
+import numpy as np
+
+print('Доступные размеры матриц: 1х2, 2х1, 1х3, 3х1, 2х2, 3х3')
+
+print('Введите количество строк для первой матрицы')
+a1 = int(input())
+b1 = []
+print('Заполните матрицу построчно')
+for i in range(a1):
+    a1 = list(map(int, input().split()))
+    b1.append(a1)
+
+print('Введите количество строк для второй матрицы')
+a2 = int(input())
+b2 = []
+print('Заполните матрицу построчно')
+for i in range(a2):
+    a2 = list(map(int, input().split()))
+    b2.append(a2)
+
+print('Транспонирование матриц')
+print(np.transpose(b1))
+print(np.transpose(b2))
+
+if len(b1) == len(b2):
+    print('Произведение матриц')
+    print(np.dot(b1, b2))
+else:
+    print('Матрицы не могут быть перемножены')
+
+print('Ранги матриц')
+print('Ранг первой матрицы:', np.linalg.matrix_rank(b1))
+print('Ранг второй матрицы:', np.linalg.matrix_rank(b2))
