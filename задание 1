@@ -1,0 +1,98 @@
+print('Выберите размерность матрицы: 1х2, 2х1, 1х3, 3х1, 2х2, 3х3')
+
+def trans(N, M):
+    TM1 = [[N[i][j] for i in range(len(N))] for j in range(len(N[0]))]
+    TM2 = [[M[i][j] for i in range(len(M))] for j in range(len(M[0]))]
+    return TM1, TM2
+
+def ans(N, M):
+    if len(N) == len(M):
+        n = len(N)
+        m = len(M)
+        k = len(M[0])
+        pr = []
+        for i in range(n):
+            for j in range(m):
+                s = 0
+                for l in range(k):
+                    s += N[i][l] * M[j][l]
+                pr.append(s)
+        return (pr)
+    else:
+        print('матрицы не могут быть перемножены')
+
+print('Введите количесвто строк для первой матрицы')
+a1 = int(input())
+m1 = []
+print('Заполните первую матрицу (ввести элементы через пробел)')
+for i in range(a1):
+    a = list(map(int, input().split()))
+    m1.append(a)
+print('Введите количество строк для второй матрицы')
+a2 = int(input())
+m2 = []
+print('Заполните вторую матрицу (ввести элементы через пробел')
+for j in range(a2):
+    b = list(map(int, input().split()))
+    m2.append(b)
+
+print('Тринспонирование матриц')
+print(trans(m1, m2))
+print('Произведение матриц')
+print(ans(m1, m2))
+print('Ранг первой матрицы:')
+#rang for first matrix
+if len(m1) == 2:
+    k = -m1[1][0] / m1[0][0]
+    m1[1][0] = 0
+    m1[1][1] += m1[0][1] * k
+    if m1[0][0] * m1[1][1] - m1[0][1] * m1[1][0] != 0:
+        print('rang 2')
+    else:
+        print('rang 1')
+if len(m1) == 3:
+    k = -m1[1][0] / m1[0][0]
+    m1[1][0] = 0
+    m1[1][1] += m1[0][1] * k
+    m1[1][2] += m1[0][2] * k
+    k1 = -m1[2][0] / m1[0][0]
+    m1[2][0] = 0
+    m1[2][1] += m1[0][1] * k1
+    m1[2][2] += m1[0][2] * k1
+    k2 = -m1[2][1] / m1[1][1]
+    m1[2][1] = 0
+    m1[2][2] += m1[1][2] * k2
+    if [m1[1][0], m1[1][1], m1[1][2]] == [0, 0, 0] and [m1[2][0], m1[2][1], m1[2][2]] == [0, 0, 0]:
+        print('rang 1')
+    if [m1[1][0], m1[1][1], m1[1][2]] == [0, 0, 0] or [m1[2][0], m1[2][1], m1[2][2]] == [0, 0, 0]:
+        print('rang 2')
+    else:
+        print('rang 3')
+print('Ранг второй матрицы:')
+#rang for second matrix
+if len(m2) == 2:
+    k = -m2[1][0] / m2[0][0]
+    m2[1][0] = 0
+    m2[1][1] += m2[0][1] * k
+    if m2[0][0] * m2[1][1] - m2[0][1] * m2[1][0] != 0:
+        print('rang 2')
+    else:
+        print('rang 1')
+if len(m2) == 3:
+    k = -m2[1][0] / m2[0][0]
+    m2[1][0] = 0
+    m2[1][1] += m2[0][1] * k
+    m2[1][2] += m2[0][2] * k
+    k1 = -m2[2][0] / m2[0][0]
+    m2[2][0] = 0
+    m2[2][1] += m2[0][1] * k1
+    m2[2][2] += m2[0][2] * k1
+    k2 = -m2[2][1] / m2[1][1]
+    m2[2][1] = 0
+    m2[2][2] += m2[1][2] * k2
+    if [m2[1][0], m2[1][1], m2[1][2]] == [0, 0, 0] and [m2[2][0], m2[2][1], m2[2][2]] == [0, 0, 0]:
+        print('rang 1')
+    if [m2[1][0], m2[1][1], m2[1][2]] == [0, 0, 0] or [m2[2][0], m2[2][1], m2[2][2]] == [0, 0, 0]:
+        print('rang 2')
+    else:
+        print('rang 3')
